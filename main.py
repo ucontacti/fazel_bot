@@ -17,7 +17,7 @@ new_fazel_set = set()
 def notify(context):
     global fazel_set
     global new_fazel_set
-    new_fazel = fazelFinder("https://www.doctolib.de/impfung-covid-19-corona/53115-bonn?ref_visit_motive_ids[]=7109&ref_visit_motive_ids[]=7978")
+    new_fazel = fazelFinder("https://www.doctolib.de/impfung-covid-19-corona/80331-muenchen?ref_visit_motive_ids[]=7109&ref_visit_motive_ids[]=7978")
     if new_fazel:
         for item in new_fazel:
             new_fazel_set.add(item[1])
@@ -27,8 +27,6 @@ def notify(context):
             text = str(new_item[0][0]) + " appointment found. Link:\n" + new_item[0][1]
             context.bot.send_message(chat_id="@BotUcontacti", text=text)
         fazel_set = new_fazel_set
-    else:
-        context.bot.send_message(chat_id="@BotUcontacti", text="Nothing new")
 def start(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text="Hellooo!!")
 
