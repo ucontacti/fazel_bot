@@ -10,6 +10,7 @@ from telegram.ext import Updater, CommandHandler, Filters, MessageHandler
 updater = Updater(token=TelegramToken, use_context=True)
 dispatcher = updater.dispatcher
 import logging
+logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 fazel_set = set()
@@ -17,16 +18,23 @@ new_fazel_set = set()
 def notify(context):
     global fazel_set
     global new_fazel_set
-    new_fazel = fazelFinder("https://www.doctolib.de/impfung-covid-19-corona/80331-muenchen?ref_visit_motive_ids[]=7109&ref_visit_motive_ids[]=7978")
+    new_fazel = fazelFinder("https://www.doctolib.de/impfung-covid-19-corona/53115-bonn?ref_visit_motive_ids[]=6768&ref_visit_motive_ids[]=6936")
+    new_fazel += fazelFinder("https://www.doctolib.de/impfung-covid-19-corona/50667-koeln?ref_visit_motive_ids[]=6768&ref_visit_motive_ids[]=6936")
+    new_fazel += fazelFinder("https://www.doctolib.de/impfung-covid-19-corona/40210-duesseldorf?ref_visit_motive_ids[]=6768&ref_visit_motive_ids[]=6936")
     if new_fazel:
         for item in new_fazel:
             new_fazel_set.add(item[1])
         tmp_set = new_fazel_set.difference(fazel_set) if fazel_set else new_fazel_set
         for item in tmp_set:
             new_item = [fazel for fazel in new_fazel if fazel[1] == item]
-            text = str(new_item[0][0]) + " appointment found. Link:\n" + new_item[0][1]
+            if new_item[0][0] == -1:
+                text = "one appointment found for " + new_item[0][2] + ". Link:\n" + new_item[0][1]
+            else:
+                text = str(new_item[0][0]) + " appointment for this week found. Link:\n" + new_item[0][1]
             context.bot.send_message(chat_id="@BotUcontacti", text=text)
         fazel_set = new_fazel_set
+    else:
+        fazel_set = set()
 def start(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text="Hellooo!!")
 

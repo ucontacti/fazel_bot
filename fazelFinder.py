@@ -10,7 +10,7 @@ def fazelFinder(my_url = 'https://www.doctolib.de/impfung-covid-19-corona/53115-
     options = Options()
     options.page_load_strategy = 'normal'
     options.add_argument("--headless")
-    driver = webdriver.Chrome("/home/sali/Desktop/chromedriver", options=options)
+    driver = webdriver.Chrome("/home/hap/projects/chromedriver", options=options)
     driver.get(my_url)
 
     height = driver.execute_script("return document.body.scrollHeight/10")
@@ -24,9 +24,14 @@ def fazelFinder(my_url = 'https://www.doctolib.de/impfung-covid-19-corona/53115-
 
     for container in containers:
         link = container.find('a', {"data-analytics-event-action":"bookAppointmentButton"}, href=True)['href']
-        if container.find("div", {"class": "Tappable-inactive"}):
+        if container.find("div", {"class": "availabilities-message"}):
+            doc_link = "https://www.doctolib.de" + link
+            next_date = container.find("div", {"class": "availabilities-message"}).text.strip()
+            result.append([-1, doc_link, next_date[19:]])
+        elif container.find("div", {"class": "Tappable-inactive"}):
             no_appointment = len(container.find_all("div", {"class": "Tappable-inactive"}))
             doc_link = "https://www.doctolib.de" + link
-            result.append([no_appointment, doc_link])            
+            result.append([no_appointment, doc_link])
+                    
     return result
 
