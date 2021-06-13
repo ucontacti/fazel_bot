@@ -31,7 +31,8 @@ def notify(context):
                 text = "one appointment found for " + new_item[0][2] + ". Link:\n" + new_item[0][1]
             else:
                 text = str(new_item[0][0]) + " appointment for this week found. Link:\n" + new_item[0][1]
-            context.bot.send_message(chat_id="@BotUcontacti", text=text)
+            if "bottrop" not in new_item[0][1]:
+                context.bot.send_message(chat_id="@BotUcontacti", text=text)
         fazel_set = new_fazel_set
     else:
         fazel_set = set()
